@@ -23,9 +23,9 @@ function exportPlot(fileName, fig)
 end
 
 % toggle parts
-A1 = 0;
+A1 = 1;
 B1 = 0;
-C1 = 1;
+C1 = 0;
 
 % -------------------- PART A --------------------
 
@@ -55,7 +55,7 @@ if (A1)
 
     grid on;
     ylim([0 3]);
-    xlim([1 2]);
+    xlim([r_0 2*r_0]);
 
     xlabel("{\\it r}");
     ylabel("{\\it w(r)}");
@@ -64,21 +64,21 @@ if (A1)
     figure(2);
     hold on;
 
-    plot(phi,w_p0,'m', 'linewidth', width);
-    plot(phi,w_1p,'r', 'linewidth', width/2, 'linestyle', '--');
-    plot(phi,w_2p,'b', 'linewidth', width/2, 'linestyle', '--');
-    plot(phi,w_3p,'k', 'linewidth', width/2, 'linestyle', '--');
+    plot(r,w_p0,'m', 'linewidth', width);
+    plot(r,w_1p,'r', 'linewidth', width/2, 'linestyle', '--');
+    plot(r,w_2p,'b', 'linewidth', width/2, 'linestyle', '--');
+    plot(r,w_3p,'k', 'linewidth', width/2, 'linestyle', '--');
 
     legend({"{\\it w_{p,0}(\\phi)}", "{\\it w_1(\\phi)}", "{\\it w_2(\\phi)}", "{\\it w_3(\\phi)}"}, 'location', 'northwest', 'orientation', 'vertical');
     legend boxoff;
 
     grid on;
     ylim([0 3]);
-    xlim([0 pi/4]);
+    xlim([r_0 2*r_0]);
 
-    xlabel("{\\it \\phi}");
+    xlabel("{\\it r}");
     ylabel("{\\it w(\\phi)}");
-    title(sprintf('{\\it w(\\phi)} vs. {\\it \\phi} with {\\it r_0} = %d, {\\it a_T} = %d, {\\it \\mu} = %d', r_0, a_T, mu));
+    title(sprintf('{\\it w_p(\\phi)} vs. {\\it r} with {\\it r_0} = %d, {\\it a_T} = %d, {\\it \\mu} = %d', r_0, a_T, mu));
 
     exportPlot('partA_r', 1);
     exportPlot('partA_phi', 2);
@@ -171,8 +171,8 @@ if (C1)
 
     grid on;
     
-    text(0.2196, 0.25, "{\\it w\\'(0.2196) = 0}");
-    text(0.2196, 1.25, "{\\it w(0.2196) = 0.96}");
+    text(0.2168, 0.25, "{\\it w\\'(0.2168) = 0}");
+    text(0.2168, 1.25, "{\\it w(0.2168) = 0.96}");
 
     ylim([-1 5]);
     xlim([0 pi/4]);
