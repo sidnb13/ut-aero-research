@@ -1,26 +1,9 @@
-% -------------------- DEFINITIONS --------------------
-% plot variable
-n = 1000;
-inc = (pi/4)/n;
-phi = (0:1:n-1) * inc;
-
-% constants
-r_0 = 1;
-a_T = 0.2;
-mu = 1;
-
-width = 3;
-
-B = sqrt(4 * mu/((3*pi + 8) * a_T * r_0^2));
+source('../scripts/variables.m');
+load('../scripts/variables.mat');
+source('../scripts/functions.m');
 
 % definition of r
 r = 2 * r_0 .* sin(phi + pi/4) .^ 2;
-
-% plot export function
-function exportPlot(fileName, fig)
-    print(fig, sprintf('%s.pdf', fileName), '-dpdfcairo');
-    system(sprintf('mv %s.pdf plots/%s.pdf', fileName, fileName));
-end
 
 % toggle parts
 A1 = 1;
@@ -34,10 +17,10 @@ w_1r = r_0./sqrt(r.*(2*r_0 - r));
 w_2r = 1 - (a_T * r_0^2/mu) * (3 .* asin(sqrt(r./(2*r_0))) - 3*pi/4 + 2);
 w_3r = (a_T*r_0/(2*mu)).*(r + 3*r_0);
 
-w_p0 = (1 - 4*(3*phi +2) ./ ((3*pi + 8) * B^2)) ./ sin(2*phi + pi/2) + (4*(sin(phi + pi/4)).^2 + 6) ./ ((3*pi + 8) * B^2);
+w_p0 = (1 - 4*(3*phi +2) ./ ((3*pi + 8) * Beta^2)) ./ sin(2*phi + pi/2) + (4*(sin(phi + pi/4)).^2 + 6) ./ ((3*pi + 8) * B^2);
 w_1p = 1./sin(2*phi + pi/2);
-w_2p = 1 - 4*(3*phi + 2)/((3*pi + 8) * B^2); 
-w_3p = 2/((3*pi + 8) * B^2) * (2*sin(phi + pi/4).^2 + 3);
+w_2p = 1 - 4*(3*phi + 2)/((3*pi + 8) * Beta^2); 
+w_3p = 2/((3*pi + 8) * Beta^2) * (2*sin(phi + pi/4).^2 + 3);
 
 if (A1)
 
@@ -91,9 +74,8 @@ end
 
 y_r = sqrt(mu * (2*r_0 - r)./(r_0 * r)) .* sqrt(1 - w_r0 .^ 2);
 
-g_p = B^4*(3*pi + 8)^2 * (sin(2*phi + pi/2)).^2 - (B^4*(3*pi + 8)^2 - 8*(3*phi + 2)*(3*pi + 8)*B^2 + 16*(3*phi + 2).^2 + 2*(4*(sin(phi + pi/4)).^2 + 6) .* ((3*pi + 8)*B^2 - 4*(3*phi + 2)) .* sin(2*phi + pi/2) + (16*(sin(phi+pi/4)).^4 + 48*(sin(phi+pi/4)).^2 + 36) .* (sin(2*phi+pi/2)).^2);
-
-y_p = sqrt(g_p) ./ (B^2 * (3*pi+8) * sin(2*phi+pi/2)) * sqrt(mu/r_0) .* cot(phi + pi/4);
+g_p = Beta^4*(3*pi + 8)^2 * (sin(2*phi + pi/2)).^2 - (Beta^4*(3*pi + 8)^2 - 8*(3*phi + 2)*(3*pi + 8)*Beta^2 + 16*(3*phi + 2).^2 + 2*(4*(sin(phi + pi/4)).^2 + 6) .* ((3*pi + 8)*B^2 - 4*(3*phi + 2)) .* sin(2*phi + pi/2) + (16*(sin(phi+pi/4)).^4 + 48*(sin(phi+pi/4)).^2 + 36) .* (sin(2*phi+pi/2)).^2);
+y_p = sqrt(g_p) ./ (Beta^2 * (3*pi+8) * sin(2*phi+pi/2)) * sqrt(mu/r_0) .* cot(phi + pi/4);
 
 
 % y_1r = sqrt(mu * (2*r_0 - r)/(r_0 * r));

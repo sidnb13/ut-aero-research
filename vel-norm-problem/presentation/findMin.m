@@ -1,12 +1,6 @@
-% plot variable
-n = 1000;
-inc = (pi/4)/n;
-phi = (0:1:n-1) * inc;
-
-% constants
-r_0 = 1;
-a_T = 0.2;
-mu = 1;
+source('../scripts/variables.m');
+load('../scripts/variables.mat');
+source('../scripts/functions.m');
 
 % definitions
 k = phi + pi/4;

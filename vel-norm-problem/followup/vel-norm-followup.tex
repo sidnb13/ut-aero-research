@@ -1,0 +1,59 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+
+\usepackage{amssymb}
+\usepackage{spalign}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\usepackage[parfill]{parskip}
+
+\title{Vel-Norm Problem Followup}
+\author{Sidharth Baskaran}
+\date{July 2, 2021}
+
+\begin{document}
+% -------------------------------------
+
+\maketitle
+
+\section{Simplifying expression for $w_p(\phi)$}
+
+\subsection{Givens}
+
+The sine function is a phase shift of the cosine function, so 
+
+\begin{equation}
+    \sin(2k)=\sin(2\phi+\pi/2)=\cos(2\phi).
+\end{equation}
+
+Further,
+
+\begin{equation}
+    2\sin^2(2k)=1-\cos(2k).
+\end{equation}
+
+Because $\cos(2k)=-\sin(2\phi)$ by a similar argument, 
+
+\begin{equation}
+    2\sin^2(2k)=1+\sin(2\phi).
+\end{equation}
+
+\subsection{Simplification}
+
+\begin{align}
+    w_p(\phi)&=\frac{1}{\underbrace{\sin(2\phi+\pi/2)}_{\cos(2\phi)}}[1\underbrace{-\frac{a_Tr_0^2}{\mu}}_{-\frac{4}{\beta^2(3\pi+8)}}(3\phi+2)]+\frac{2}{\beta^2(3\pi+8)}(2\sin^2(\phi+\pi/4)+3)\\
+    &=\frac{1}{\cos(2\phi)}\left[1-\frac{4}{\beta^2(3\pi+8)}(3\phi+2)\right]+\frac{2}{\beta^2(3\pi+8)}(2\sin^2(\phi+\pi/4)+3)
+\end{align}
+
+\section{Numerical evaluations of $\phi_m$}
+
+\subsection{Numerical evaluation of $\phi_m$ given $\beta$}
+
+\subsection{Plot of $\phi_m$ vs. $\delta=\frac{1}{\beta^2}$}
+
+\section{Numerical minimization of $w_p(\phi)$}
+
+% -------------------------------------
+\end{document}

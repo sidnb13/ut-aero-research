@@ -1,0 +1,42 @@
+# Created by Octave 6.2.0, Sat Jul 03 12:03:32 2021 CDT <sidbaskaran@Sids-MBP>
+# name: Beta
+# type: scalar
+1.071349993907464
+
+
+# name: a_T
+# type: scalar
+0.20000000000000001
+
+
+# name: ans
+# type: scalar
+1
+
+
+# name: inc
+# type: scalar
+0.00078539816339744833
+
+
+# name: mu
+# type: scalar
+1
+
+
+# name: n
+# type: scalar
+1000
+
+
+# name: phi
+# type: range
+# base, limit, increment
+0 0.78461276523405088 0.00078539816339744833
+
+
+# name: r_0
+# type: scalar
+1
+
+
