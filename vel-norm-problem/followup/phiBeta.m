@@ -2,10 +2,11 @@ load('../scripts/variables.mat');
 source('../scripts/functions.m');
 
 % Defining yp as anonymous function
-y_p = @(Beta_p) sqrt(Beta_p^4*(3*pi + 8)^2 * (sin(2*phi + pi/2)).^2 ...
+g_p = @(Beta_p) Beta_p^4*(3*pi + 8)^2 * (sin(2*phi + pi/2)).^2 ...
     - (Beta_p^4*(3*pi + 8)^2 - 8*(3*phi + 2)*(3*pi + 8)*Beta_p^2 + 16*(3*phi + 2).^2 + 2*(4*(sin(phi + pi/4)).^2 + 6) ...
     .* ((3*pi + 8)*Beta_p^2 - 4*(3*phi + 2)) .* sin(2*phi + pi/2) + (16*(sin(phi+pi/4)).^4 ...
-    + 48*(sin(phi+pi/4)).^2 + 36) .* (sin(2*phi+pi/2)).^2)) ./ (Beta_p^2 * (3*pi+8) * sin(2*phi+pi/2)) * sqrt(mu/r_0) .* cot(phi + pi/4);
+    + 48*(sin(phi+pi/4)).^2 + 36) .* (sin(2*phi+pi/2)).^2);
+y_p = @(Beta_p) sqrt([0 g_p(Beta_p)(2:end)]) ./ (Beta_p^2 * (3*pi+8) * sin(2*phi+pi/2)) * sqrt(mu/r_0) .* cot(phi + pi/4);
 
 % return real part of a vector
 function y = realBreakpoint(x)
@@ -40,11 +41,7 @@ w_p = @(Beta_p) 1./cos(2*phi).*(1-(4/(Beta_p^2*(3*pi+8)))*(3*phi+2))+2/(Beta_p^2
 for i = 1:n
     y_real = y_p(Beta_vec(i))(1:realBreakpoint(y_p(Beta_vec(i))));
     [yvals idx] = sort(y_real);
-    if (length(idx) <= 1)
-        phi_m1(i) = max(phi_m1);
-        w_1(i) = max(w_1);
-        y_0(i) = min(y_0);
-    else
+    if (length(idx) > 1)
         w_1(i) = w_p(Beta_vec(i))(idx(2));
         phi_m1(i) = phi(idx(2));
         y_0(i) = yvals(2);
@@ -52,6 +49,7 @@ for i = 1:n
 end
 
 % plot delta over phi_m1
+if (1)
 figure(1);
 hold on;
 plot(delta,phi_m1,'b', 'linewidth', 3);
@@ -87,3 +85,4 @@ legend boxoff;
 exportPlot('phi_delta_min', 2);
 
 close all;
+endif

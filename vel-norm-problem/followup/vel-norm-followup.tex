@@ -6,7 +6,7 @@
 \usepackage{amsmath}
 \usepackage{float}
 \usepackage{graphicx}
-\usepackage[%  
+\usepackage[pdfusetitle,
     colorlinks=true,
     linkcolor=red
 ]{hyperref}
@@ -90,11 +90,7 @@ Thus, by iterating through the values of \verb|Beta_vec|, we can generate a corr
         for i = 1:n
             y_real = y_p(Beta_vec(i))(1:realBreakpoint(y_p(Beta_vec(i))));
             [yvals idx] = sort(y_real);
-            if (length(idx) <= 1)
-                phi_m1(i) = max(phi_m1);
-                w_1(i) = max(w_1);
-                y_0(i) = min(y_0);
-            else
+            if (length(idx) > 1)
                 w_1(i) = w_p(Beta_vec(i))(idx(2));
                 phi_m1(i) = phi(idx(2));
                 y_0(i) = yvals(2);
@@ -108,13 +104,12 @@ In Figure \ref{loop1} above, the vector \verb|y_0| is updated with the value $y_
 for each value of $\beta$, and is expected to be 0. The vector \verb|w_1| is updated with $w_p(\phi_{m,i})$, which is expected to be unity. As was done with \verb|y_p(Beta)|, 
 we have defined a vector \verb|w_p(Beta)| to represent $w_p(\phi)$ where \verb|Beta| is a constant that can be varied.
 Thus, we should expect $\vec w_p(\vec\phi_m)=\vec{1}$, $\vec y_p(\vec\phi_m)=\vec{0}$, and the existence of $\vec\phi_m=\begin{bmatrix}\phi_{m,1}\\\vdots\\\phi_{m,n}\end{bmatrix}$ at the end of the loop.
-The conditional checks are used to deal with numerical error which results in \verb|y_p(Beta_vec(i))| being full of complex values.
-The following plot of $\phi_m$ vs. $\delta$ captures these results with minor numerical error.
+The conditional check is to account for cases where the domain of $y_p(\phi)\in \mathbb{R}$ is very small, so we are only able to find $\phi_m=0\implies y(\phi_m)=0$
 
 \begin{figure}[H]
     \centering
     \includegraphics{plots/phi_delta_y.pdf}
-    \caption{A plot of thes results}\label{yminplot}
+    \caption{A plot of these results}\label{yminplot}
 \end{figure}
 
 We see that $y_p(\phi_m)\approx 0,\;w_p(\phi_m)\approx 1\;\forall\;\phi_m$, which is consistent with the expectations. 
