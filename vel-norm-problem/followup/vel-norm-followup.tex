@@ -15,7 +15,7 @@
 
 \title{Vel-Norm Problem Followup}
 \author{Sidharth Baskaran}
-\date{July 3, 2021}
+\date{July 4, 2021}
 
 \begin{document}
 % -------------------------------------
@@ -28,7 +28,7 @@ The sine function is a phase shift of the cosine function, so
 \begin{equation}
     \sin(2k)=\sin(2\phi+\pi/2)=\cos(2\phi).
 \end{equation}
-Further,
+It is also given that
 \begin{equation}
     2\sin^2(2k)=1-\cos(2k).
 \end{equation}
@@ -54,7 +54,7 @@ Note that
 
 This implies that $\sin(2\phi+\pi/2)\neq 0$, and further that $y_p$ is only defined for $\varphi(\phi)\geq 0$. Thus, the vector \verb|y_p(Beta)| must be shortened to reflect this and exclude complex numbers.
 From calculations, we find that the real representation of $y_p$ is \verb|y_p(Beta)(1:548)| using $a_T=0.2,r_0=1,\mu=1$ with $\beta\approx 1.07$.
-To find the real portion of this vector, we have called a function \verb|realBreakpoint(vector)| in Figure \ref{loop1}.
+To find the section of this vector that is $\in \mathbb{R}$, we have called a function \verb|realBreakpoint(vector)| in Figure \ref{loop1}.
 Sorting this vector and determining the corresponding $\phi_m$ solves the problem, where we expect \verb|y_minValue = 0| and \verb|phi_m| to be the corresponding value of $\phi$:
 
 \begin{verbatim}
@@ -63,7 +63,7 @@ Sorting this vector and determining the corresponding $\phi_m$ solves the proble
     phi_m = index_vector(1);
 \end{verbatim}
 
-A similar approach can be employed for a changing parameter $\beta$. 
+This approach can be extended for a changing parameter $\beta$. 
 Since $\delta=\frac{1}{\beta^2}\in (0.001,1)$, $\beta=\sqrt{\frac{1}{\delta}}\in (1,\sqrt{1000})$.
 In Octave/MATLAB, we can implement it as
 
@@ -103,8 +103,11 @@ Thus, by iterating through the values of \verb|Beta_vec|, we can generate a corr
 In Figure \ref{loop1} above, the vector \verb|y_0| is updated with the value $y_p(\phi_{m,i})$ in each iteration
 for each value of $\beta$, and is expected to be 0. The vector \verb|w_1| is updated with $w_p(\phi_{m,i})$, which is expected to be unity. As was done with \verb|y_p(Beta)|, 
 we have defined a vector \verb|w_p(Beta)| to represent $w_p(\phi)$ where \verb|Beta| is a constant that can be varied.
-Thus, we should expect $\vec w_p(\vec\phi_m)=\vec{1}$, $\vec y_p(\vec\phi_m)=\vec{0}$, and the existence of $\vec\phi_m=\begin{bmatrix}\phi_{m,1}\\\vdots\\\phi_{m,n}\end{bmatrix}$ at the end of the loop.
-The conditional check is to account for cases where the domain of $y_p(\phi)\in \mathbb{R}$ is very small, so we are only able to find $\phi_m=0\implies y(\phi_m)=0$
+Thus, we should expect $w_p(\vec\phi_m)=\vec{1}$, $y_p(\vec\phi_m)=\vec{0}\in \mathbb{R}^n$, and the existence of $\vec\phi_m=\begin{bmatrix}\phi_{m,1}\\\vdots\\\phi_{m,n}\end{bmatrix}\in \mathbb{R}^n$ at the end of the loop.
+The second index of \verb|y_p(Beta_vec(i)| is accessed to find $\phi_{m,i}$ within the loop because $\phi=0$ always satisfies $y_p(\phi)=0$, and we want to find the second such value.
+The conditional check is to account for cases where the domain of $y_p(\phi)\in \mathbb{R}$ is very small (i.e. \verb|length(y_p(Beta_vec(i))| is 1), so we are only able to find $\phi_{m,i}=0\implies y(\phi_m)=0$.
+
+The results of $phi_m$ vs. $\delta$ are expressed in Figure \ref{yminplot} below. $y_p(\phi_m)\approx 0$ and $w_p(\phi_m)\approx 1$ within numerical error, which verifies the validity of these results.
 
 \begin{figure}[H]
     \centering
@@ -112,15 +115,13 @@ The conditional check is to account for cases where the domain of $y_p(\phi)\in 
     \caption{A plot of these results}\label{yminplot}
 \end{figure}
 
-We see that $y_p(\phi_m)\approx 0,\;w_p(\phi_m)\approx 1\;\forall\;\phi_m$, which is consistent with the expectations. 
-
 \section{Numerical minimization of \texorpdfstring{$w_p(\phi)$}{}}
 
 We use a similar approach as before to minimize $w_p(\phi)$ numerically. 
 In Figure \ref{loop1}, \verb|w_1(i)| was updated
 to reflect the value of $w_p(\phi_{m,i})$ where $\phi=\phi_{m,i}$ minimized $y_p(\phi)$ for corresponding values of $\beta_i,\delta_i$
 from Eq. \ref{paravectors}. The following code defines a vector \verb|phi_m2| of length $n=1000$ and populates it with the value of $\phi_{m,i}$ that minimizes $w_p(\phi)$ for $\beta_i$.
-The minimum value is stored in another vector \verb|w_min|.
+The corresponding minimum values are stored in another vector \verb|w_min|. Note that the first index of the sorted vector \verb|w_vals| is accessed, since we are looking for the absolute minimum.
 
 \begin{figure}[H]
     \begin{verbatim}
