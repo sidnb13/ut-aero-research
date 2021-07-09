@@ -1,6 +1,6 @@
-source('../scripts/variables.m');
-load('../scripts/variables.mat');
-source('../scripts/functions.m');
+source('variables.m');
+load('variables.mat');
+source('functions.m');
 
 % definition of r
 r = 2 * r_0 .* sin(phi + pi/4) .^ 2;

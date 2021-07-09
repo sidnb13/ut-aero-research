@@ -1,5 +1,0 @@
-octave-workspace
-.DS_Store
-output/*
-!output/*.pdf
-.vscode/

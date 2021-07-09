@@ -1,5 +1,5 @@
-load('../scripts/variables.mat');
-source('../scripts/functions.m');
+load('variables.mat');
+source('functions.m');
 
 % Defining yp as anonymous function
 g_p = @(Beta_p) Beta_p^4*(3*pi + 8)^2 * (sin(2*phi + pi/2)).^2 ...

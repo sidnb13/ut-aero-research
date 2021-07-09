@@ -1,6 +1,6 @@
-source('../scripts/variables.m');
-load('../scripts/variables.mat');
-source('../scripts/functions.m');
+source('variables.m');
+load('variables.mat');
+source('functions.m');
 
 % definitions
 k = phi + pi/4;
