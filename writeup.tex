@@ -1,0 +1,34 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+
+\usepackage{amssymb}
+\usepackage{spalign}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage[pdfusetitle,
+    colorlinks=true,
+    linkcolor=red
+]{hyperref}
+
+\usepackage[parfill]{parskip}
+\usepackage{pgffor}
+
+\title{Thrust Normal to Velocity Vector}
+\author{\vspace{-30ex}}
+
+\begin{document}
+% -------------------------------------
+
+\maketitle
+
+\foreach \idx in {3,...,22} {
+    \centering
+    \framebox{\includegraphics[page=\idx,width=.9\textwidth]{problem-a/output/vel-norm-presentation.pdf}}\\
+}
+
+\input{tex/followup.tex}
+\input{tex/numerical-methods.tex}
+
+% -------------------------------------
+\end{document}

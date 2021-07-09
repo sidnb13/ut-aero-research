@@ -1,3 +1,5 @@
-.vscode/
-*/octave-workspace
+octave-workspace
 .DS_Store
+output/*
+!output/*.pdf
+.vscode/

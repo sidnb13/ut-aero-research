@@ -6,6 +6,11 @@
 \usepackage{cmbright}
 \usepackage{cancel}
 
+\newcommand{\sectit}[1]{
+    \section{#1}
+    \frametitle{#1}
+}
+
 %Information to be included in the title page:
 \title{Spacecraft Motion with Thrust Normal to Velocity Vector}
 \date{June 15-29 2021}
@@ -16,7 +21,7 @@
 
 \begin{frame}
 
-\frametitle{Weekly Progress}
+\sectit{Weekly Progress}
 
 \begin{itemize}
     \item June 10-15
@@ -37,7 +42,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Expressing $w(r)$ in terms of $\phi$ and $\beta$}
+    \sectit{Expressing $w(r)$ in terms of $\phi$ and $\beta$}
 
     Approach: reexpress components of $w(r)$ and substitute $r(\phi)$
 
@@ -55,7 +60,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Plotting $w_1(r),w_2(r),w_3(r)$}
+    \sectit{Plotting $w_1(r),w_2(r),w_3(r)$}
 
     \begin{center}
         \includegraphics[scale=0.7]{plots/partA_r.pdf}
@@ -63,7 +68,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Reexpressing $w_1(r)$}
+    \sectit{Reexpressing $w_1(r)$}
 
     \begin{align}
         w_{1p}(\phi)&=\frac{r_{0}}{\sqrt{r\left(2 r_{0}-r\right)}}_{\big\rvert_{r(\phi)}}\\
@@ -77,7 +82,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Reexpressing $w_2(r)$}
+    \sectit{Reexpressing $w_2(r)$}
 
     \begin{align}
         w_{2p}(\phi)&=1-\frac{a_Tr_0^2}{\mu}\left(3\arcsin(\sqrt{\frac{r}{2r_0}})-\frac{3\pi}{4}+2\right)_{\big\rvert_{r(\phi)}}\\
@@ -87,7 +92,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Reexpressing $w_3(r)$}
+    \sectit{Reexpressing $w_3(r)$}
 
     \begin{align}
         w_{3p}(\phi)&=\frac{a_Tr_0}{2\mu}(r+3r_0)_{\big\rvert_{r(\phi)}}\\
@@ -100,7 +105,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Expression for $w_p(\phi)$}
+    \sectit{Expression for $w_p(\phi)$}
 
     \begin{align}
         w_p(\phi)&=\frac{1}{\sin(2k)}\left[1-\frac{a_Tr_0^2}{\mu}\left(3\phi+2\right)\right]+\frac{2}{\beta^2(3\pi+8)}(2\sin^2(k)+3)\\ %corrected this
@@ -109,7 +114,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Checking answer with plots}
+    \sectit{Checking answer with plots}
 
     \begin{center}
         \includegraphics[scale=0.7]{plots/partA_phi.pdf}
@@ -117,7 +122,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Expressing $y(r)$ in terms of $\phi$ and $\beta$}
+    \sectit{Expressing $y(r)$ in terms of $\phi$ and $\beta$}
 
     Approach similar to $w(r)$:
     $$
@@ -126,7 +131,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Reexpressing $y_1(r)$}
+    \sectit{Reexpressing $y_1(r)$}
 
     \begin{align}
         y_{1p}(\phi)&=\sqrt{\frac{\mu(2r_0-r)}{rr_0}}\bigg\rvert_{r(\phi)}\\
@@ -137,7 +142,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Reexpressing $y_2(r)$}
+    \sectit{Reexpressing $y_2(r)$}
 
     Given $y_{2p}(\phi)=\sqrt{1-w_p(\phi)^2}$.\newline
     Define $\varphi(\phi)$ such that $\frac{\varphi(\phi)}{(3\pi+8)^2\beta^4\sin^2(2k)}=1-w_p(\phi)^2$.
@@ -145,23 +150,23 @@
     Then, by squaring 12,
 
     {\tiny
-        \begin{align*}
+        \begin{align}
             1-w_p(\phi)^2&=\frac{(3\pi+8)^2\beta^4\sin^2(2k)-\left[(3\pi+8)^2\beta^4-8(3\phi+2)(3\pi+8)\beta^2+16(3\phi+2)^2\right]}{(3\pi+8)^2\beta^4\sin^2(2k)}\\
             &-\frac{2\sin(2k)(4\sin^2(k)+6)((3\pi+8)\beta^2-4(3\phi+2))}{(3\pi+8)^2\beta^4\sin^2(2k)}\\
             &-\frac{\sin^2(2k)(16\sin^4(k)+48\sin^2(k)+36)}{(3\pi+8)^2\beta^4\sin^2(2k)}
-        \end{align*}
+        \end{align}
     }
 
     Extracting the denominator,
 
-    $$
+    \begin{equation}
     y_p(\phi)=\frac{\sqrt{\varphi(\phi)}}{\beta^2(3\pi+8)\sin(2k)}\sqrt{\frac{\mu}{r_0}}\cot(k)
-    $$
+    \end{equation}
 
 \end{frame}
 
 \begin{frame}
-    \frametitle{Plots to verify $y_p(\phi)$}
+    \sectit{Plots to verify $y_p(\phi)$}
 
     \begin{center}
         \includegraphics[scale=0.7]{plots/partB.pdf}
@@ -169,7 +174,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Minimizing $w(r)$ or $w_p(\phi)$}
+    \sectit{Minimizing $w(r)$ or $w_p(\phi)$}
 
     \begin{itemize}
         \item Began by differentiating $w(r)$ and simplifying
@@ -184,7 +189,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{First derivative test on $w(r)$}
+    \sectit{First derivative test on $w(r)$}
 
     {\tiny\begin{align}
         w_1\,'(r)&=\frac{d}{dr}r_0(2r_0r-r^2)^{-1/2}\\
@@ -200,7 +205,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{First derivative test on $w(r)$ (continued)}
+    \sectit{First derivative test on $w(r)$ (continued)}
 
     \begin{align}
         w\,'(r)&=\frac{d}{dr}\left[w_1(r)w_2(r)+w_3(r)\right]\\
@@ -217,7 +222,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Reubstituting with $r(\phi)$ and simplifying}
+    \sectit{Reubstituting with $r(\phi)$ and simplifying}
 
     First, $2r_0r-r^2=4r_0^2\sin^2(k)-4r_0sin^4(k)=4r_0^2\sin^2(k)\cos^2(k)$.
 
@@ -235,7 +240,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Reubstituting with $r(\phi)$ and simplifying (continued)}
+    \sectit{Reubstituting with $r(\phi)$ and simplifying (continued)}
 
     {\footnotesize\begin{align}
         w_p\,'(\phi)&=\underbrace{\frac{2\sin^2(k)-1}{r_0\sin^3(2k)}\left(1-\frac{a_Tr_0^2}{\mu}(3\phi+2)\right)}_{\frac{-2\mu\cos(2k)\left(1-\frac{a_Tr_0^2}{\mu}(3\phi+2)\right)}{2\mu r_0\sin^3(2k)}}\underbrace{-\frac{3a_Tr_0}{2\mu\sin^2(2k)}+\frac{a_Tr_0}{2\mu}}_{\frac{a_Tr_0^2\sin^3(2k)-3a_Tr_0^2\sin(2k)}{2\mu r_0\sin^3(2k)}}\\
@@ -244,7 +249,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Minimization of $w_p(\phi)$}
+    \sectit{Minimization of $w_p(\phi)$}
 
     Note that $2\mu r_0\sin^3(2k)\neq 0\implies \sin(2k)\neq 0$. So $2(\phi+\pi/4)\not\in \{0,\pi\}$ means $\phi\neq \pi/4$ since $\phi\in [0,\pi/4)$.
 
@@ -259,7 +264,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-    \frametitle{Numerical minimization of $w_p(\phi)$}
+    \sectit{Numerical minimization of $w_p(\phi)$}
 
     Code:
     {\scriptsize\begin{verbatim}
@@ -284,7 +289,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Intersection of $d_1(\phi)$ and $d_2(\phi)$}
+    \sectit{Intersection of $d_1(\phi)$ and $d_2(\phi)$}
 
     \begin{center}
         \includegraphics[scale=0.7]{plots/partC_min.pdf}
@@ -292,7 +297,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Visual of $\text{min}(w_p(\phi))$}
+    \sectit{Visual of $\text{min}(w_p(\phi))$}
 
     \begin{center}
         \includegraphics[scale=0.7]{plots/partC_r.pdf}

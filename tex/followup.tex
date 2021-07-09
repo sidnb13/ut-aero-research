@@ -1,27 +1,3 @@
-\documentclass[11pt]{article}
-\usepackage[margin=1in]{geometry}
-
-\usepackage{amssymb}
-\usepackage{spalign}
-\usepackage{amsmath}
-\usepackage{float}
-\usepackage{graphicx}
-\usepackage[pdfusetitle,
-    colorlinks=true,
-    linkcolor=red
-]{hyperref}
-
-\usepackage[parfill]{parskip}
-
-\title{Vel-Norm Problem Followup}
-\author{Sidharth Baskaran}
-\date{July 4, 2021}
-
-\begin{document}
-% -------------------------------------
-
-\maketitle
-
 \section{Simplifying expression for \texorpdfstring{$w_p(\phi)$}{}}
 
 The sine function is a phase shift of the cosine function, so 
@@ -52,7 +28,7 @@ Note that
     y_p(\phi)=\frac{\sqrt{\varphi(\phi)}}{\beta^2(3\pi+8)\sin(2\phi+pi/2)}\sqrt{\frac{\mu}{r_0}}\cot(\phi+\pi/4)
 \end{equation}
 
-This implies that $\sin(2\phi+\pi/2)\neq 0$, and further that $y_p$ is only defined for $\varphi(\phi)\geq 0$. Thus, the vector \verb|y_p(Beta)| must be shortened to reflect this and exclude complex numbers.
+$\varphi(\phi)$ was defined in Eq. 18-20 of the presentation, and the above expression comes from Eq. 21 of the presentation. This implies that $\sin(2\phi+\pi/2)\neq 0$, and further that $y_p$ is only defined for $\varphi(\phi)\geq 0$. Thus, the vector \verb|y_p(Beta)| must be shortened to reflect this and exclude complex numbers.
 From calculations, we find that the real representation of $y_p$ is \verb|y_p(Beta)(1:548)| using $a_T=0.2,r_0=1,\mu=1$ with $\beta\approx 1.07$.
 To find the section of this vector that is $\in \mathbb{R}$, we have called a function \verb|realBreakpoint(vector)| in Figure \ref{loop1}.
 Sorting this vector and determining the corresponding $\phi_m$ solves the problem, where we expect \verb|y_minValue = 0| and \verb|phi_m| to be the corresponding value of $\phi$:
@@ -107,11 +83,11 @@ Thus, we should expect $w_p(\vec\phi_m)=\vec{1}$, $y_p(\vec\phi_m)=\vec{0}\in \m
 The second index of \verb|y_p(Beta_vec(i)| is accessed to find $\phi_{m,i}$ within the loop because $\phi=0$ always satisfies $y_p(\phi)=0$, and we want to find the second such value.
 The conditional check is to account for cases where the domain of $y_p(\phi)\in \mathbb{R}$ is very small (i.e. \verb|length(y_p(Beta_vec(i))| is 1), so we are only able to find $\phi_{m,i}=0\implies y(\phi_m)=0$.
 
-The results of $phi_m$ vs. $\delta$ are expressed in Figure \ref{yminplot} below. $y_p(\phi_m)\approx 0$ and $w_p(\phi_m)\approx 1$ within numerical error, which verifies the validity of these results.
+The results of $\phi_m$ vs. $\delta$ are expressed in Figure \ref{yminplot} below. $y_p(\phi_m)\approx 0$ and $w_p(\phi_m)\approx 1$ within numerical error, which verifies the validity of these results.
 
 \begin{figure}[H]
     \centering
-    \includegraphics{plots/phi_delta_y.pdf}
+    \includegraphics{problem-b/plots/phi_delta_y.pdf}
     \caption{A plot of these results}\label{yminplot}
 \end{figure}
 
@@ -139,9 +115,6 @@ The corresponding minimum values are stored in another vector \verb|w_min|. Note
 Figure \ref{wminplot} below, showing $\phi_m$ (representing \verb|phi_m2|) vs. $\delta$, summarizes these results.
 
 \begin{figure}[H]
-    \includegraphics{plots/phi_delta_min.pdf}
+    \includegraphics{problem-b/plots/phi_delta_min.pdf}
     \caption{Values of $\phi_m$ that minimize $w_p(\phi)$ for various $\beta$}\label{wminplot}
 \end{figure}
-
-% -------------------------------------
-\end{document}
