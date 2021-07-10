@@ -1,7 +1,26 @@
-\section{Newton-Raphson method for finding roots}
+\section{Bisection and Newton-Raphson method for finding roots}
 
-\subsection{\texorpdfstring{Minimizing $w_p(\phi)$}{}}
+\subsection{Bisection method}
 
-\subsection{\texorpdfstring{Minimizing $y_p(\phi)$}{}}
+Let $f(x)\in \mathbb{R}$ be continuous and $x,c\in [a,b]$. Also define $\epsilon_0=|a-b|$ as the initial error. The approach to the bisection method involves using a finite number of iterations where the original domain interval $[a,b]$ (and likewise the error) is continuously halved until the desired tolerance $\epsilon$ and thusly the root of the function in question is found.
+From, this we can conclude that the required precision/tolerance is $\epsilon=|c_n-c|$ where $f(c)=0$ and $c_n$ is the upper or lower bound of the interval at the $n$th iteration.
+Finding an upper bound for the value of $n$ eliminates the need for an infinite loop and prevents divergence of the bisection algorithm. The upper bound for $n$ is expressed as \footnote{\href{https://en.wikipedia.org/wiki/Bisection_method}{Wikipedia - Bisection method}}
+
+\begin{equation}
+    |c_n-c|\leq \frac{|b-a|}{2^n}\implies n\leq \log(\frac{\epsilon_0}{\epsilon}).
+\end{equation}
+
+We will use the bisection method to find the roots for $w_p\,'(\phi)$ in order to minimize $w_p(\phi)$ and find when $y_p(\phi)=0$ for a given tolerance $\epsilon$.
+
+\subsubsection{Minimizing \texorpdfstring{$w_p(\phi)$}{}}
+
+\subsubsection{Roots for \texorpdfstring{$y_p(\phi)$}{}}
+
+\subsection{Newton-Raphson method}
+
+The implementation of the Newton-Raphson algorithm used here was derived from the pseudocode on the
+corresponding Wikipedia article\footnote{\href{https://en.wikipedia.org/wiki/Newtons_method}{Wikipedia - Newton's method}}.
+
+The code used to implement both algorithms is located here.
 
 \section{Curve fitting}
