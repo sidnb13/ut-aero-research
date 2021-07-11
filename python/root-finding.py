@@ -1,15 +1,15 @@
-from matplotlib import lines
 import numpy as np
 import matplotlib.pyplot as plt
 
-# set domain
-ARGLEN = 1000
+# set domain and consts
+N = 1000
+PLOT = True
 START = 0
 END = np.pi/4
 
-phiInt = np.linspace(START,END,ARGLEN)
+phiInt, step = np.linspace(START,END,N, retstep=True)
 # set constants
-EPSILON = 1e-6
+EPSILON = 1e-4
 EPSILON_0 = np.argmax(phiInt) - np.argmin(phiInt)
 a_T = 0.2
 r_0 = 1
@@ -26,38 +26,71 @@ gPhi = lambda phi, Beta : np.power((3*np.pi+8),2)*np.power(Beta,4)*np.power(np.s
 yPhi = lambda phi, Beta : np.sqrt(gPhi(phi,Beta))/(np.power(Beta,2)*(3*np.pi+8)*np.sin(2*phi+np.pi/2))*np.sqrt(mu/r_0)*1/np.tan(phi+np.pi/4)
 
 # derivatives
-wPhiDeriv = lambda phi, beta : (a_T*np.power(r_0,2)*(np.power(np.sin(2*phi+np.pi/2),3)-3)*np.sin(2*phi+np.pi/2)\
-            -2*mu*np.cos(2*phi+np.pi/2)*(1-a_T*np.power(r_0,2)*(3*phi+2)/mu))/(2*mu*r_0*np.power(np.sin(2*phi+np.pi/2),3))
+wPhiDeriv = lambda phi, beta : 2*(np.power(np.sin(2*phi+np.pi/2),2)-3)*np.sin(2*phi+np.pi/2)/((3*np.pi+8)*np.power(beta,2)*np.power(np.sin(2*phi+np.pi/2),3))\
+                                - np.cos(2*phi+np.pi/2)*(1-(3*phi+2)*4/((3*np.pi+8)*np.power(beta,2)))/(r_0*np.power(np.sin(2*phi+np.pi/2),3))
+
+wPhiDeriv2Inst = lambda phi, beta: (wPhiDeriv(phi+step,beta)-wPhiDeriv(phi-step,beta))/(2*step)
+
+# calculate either overall or inst. deriv
+phiIntReal = lambda beta : phiInt[~np.isnan(yPhi(phiInt,beta))]
+
+yPhiDerivInst = lambda phi, beta : (yPhi(phi+step,beta)-yPhi(phi-step,beta))/(2*step)
+yPhiDeriv = lambda beta : np.diff(yPhi(phiIntReal,beta))/np.diff(phiIntReal)
 
 # bisection algorithm to find roots of y(phi) and w'(phi)
-def bisectionAlgorithm(f,phiInt):
+def bisectionAlgorithm(f,phiInt,Beta):
     # calculating iteration upper bound
     iterMax = int(np.log2(EPSILON_0/EPSILON))
     # iterate through until root is found
     a,b = phiInt[np.argmin(phiInt)],phiInt[np.argmax(phiInt)]
-    c,n = 0,0
+    c,n = 0,1
 
     while n <= iterMax:
         c = (a+b)/2
-        if (b-a)/2 <= EPSILON or f(c,Beta) == 0:
+        if (b-a)/2 <= EPSILON or np.isclose(f(c,Beta),0,atol=EPSILON):
             return c
         if np.sign(f(a,Beta)) == np.sign(f(c,Beta)):
             a = c
-        else: b = c
+        else: 
+            b = c
         n = n+1
     return None
 
 # Newton-Raphson algorithm to find roots
-def NewtonRaphson():
-    pass
+def newtonRaphson(f, f2, phiInt, Beta, numIter):
+    # guess the midpoint of interval
+    x0 = f(np.median(phiInt),Beta)
+    tol = EPSILON
+    epsilon = np.power(EPSILON,2)
 
-# root = bisectionAlgorithm(wPhiDeriv,phiInt)
-# print(root)
+    for _ in range(numIter):
+        y = f(x0,Beta)
+        yd = f2(x0,Beta)
 
-# plt.plot(phiInt,wPhiDeriv(phiInt,Beta))
-# plt.plot(phiInt,np.zeros(ARGLEN),linestyle='dashdot')
-# plt.plot(root,wPhiDeriv(root,Beta),marker='o', markersize=5, color="black")
+        if np.abs(yd) <= epsilon:
+            return x0
+        x1 = x0 - y/yd
+        if np.abs(x1 - x0) <= tol:
+            return x0
+        x0 = x1
+    return None
 
-# plt.xlim(START,END)
-# plt.ylim(-1,5)
-# plt.show()
+print(newtonRaphson(yPhi,yPhiDerivInst,phiIntReal(Beta),Beta,1000))
+
+if PLOT:
+    plt.rcParams.update({
+        "text.usetex": True,
+        "font.family": "sans-serif",
+        "font.sans-serif": ["Helvetica"]
+    })
+
+    plt.plot(phiInt,wPhi(phiInt,Beta),label='$w_p(\\phi)$')
+    plt.plot(phiInt,wPhiDeriv(phiInt,Beta),label='$w_p\'(\\phi)$')
+    plt.plot(phiInt,np.zeros(N),linestyle='dashdot')
+    plt.plot(bisectionAlgorithm(wPhiDeriv,phiInt,Beta),0,marker='o', markersize=5, color="black")
+
+    plt.xlim(START,END)
+    plt.ylim(-1,5)
+
+    plt.legend(loc='upper left')
+    plt.savefig('bruh.pdf',backend='pgf',bbox_inches='tight')

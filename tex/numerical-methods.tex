@@ -2,7 +2,7 @@
 
 \subsection{Bisection method}
 
-Let $f(x)\in \mathbb{R}$ be continuous and $x,c\in [a,b]$. Also define $\epsilon_0=|a-b|$ as the initial error. The approach to the bisection method involves using a finite number of iterations where the original domain interval $[a,b]$ (and likewise the error) is continuously halved until the desired tolerance $\epsilon$ and thusly the root of the function in question is found.
+Let $f(x)\in \mathbb{R}$ be continuous on the interval where $x,c\in [a,b]$. Also define $\epsilon_0=|a-b|$ as the initial error. The approach to the bisection method involves using a finite number of iterations where the original domain interval $[a,b]$ (and likewise the error) is continuously halved until the desired tolerance $\epsilon$ and thusly the root of the function in question is found.
 From, this we can conclude that the required precision/tolerance is $\epsilon=|c_n-c|$ where $f(c)=0$ and $c_n$ is the upper or lower bound of the interval at the $n$th iteration.
 Finding an upper bound for the value of $n$ eliminates the need for an infinite loop and prevents divergence of the bisection algorithm. The upper bound for $n$ is expressed as \footnote{\href{https://en.wikipedia.org/wiki/Bisection_method}{Wikipedia - Bisection method}}
 
@@ -11,6 +11,13 @@ Finding an upper bound for the value of $n$ eliminates the need for an infinite 
 \end{equation}
 
 We will use the bisection method to find the roots for $w_p\,'(\phi)$ in order to minimize $w_p(\phi)$ and find when $y_p(\phi)=0$ for a given tolerance $\epsilon$.
+In Eq. 40 from the presentation, $w_p\,'(\phi)$ was not expressed in terms of $\beta$, so the following expression will be used in the algorithms:
+
+
+\begin{equation}
+    w_p\,'(\phi)=\frac{2(\sin^2(2\phi+\pi/2)-3)\sin(2\phi+\pi/2)}{(3\pi+8)\beta^2\sin^3(2\phi+\pi/2)}
+    -\frac{\cos(2\phi+\pi/2)\left(1-\frac{4}{(3\pi+8)\beta^2}(3\phi+2)\right)}{r_0\sin^3(2\phi+\pi/2)}
+\end{equation}
 
 \subsubsection{Minimizing \texorpdfstring{$w_p(\phi)$}{}}
 
@@ -20,6 +27,13 @@ We will use the bisection method to find the roots for $w_p\,'(\phi)$ in order t
 
 The implementation of the Newton-Raphson algorithm used here was derived from the pseudocode on the
 corresponding Wikipedia article\footnote{\href{https://en.wikipedia.org/wiki/Newtons_method}{Wikipedia - Newton's method}}.
+This method cannot be used to solve for the root of $y_p(\phi)$ because although the function exists in the domain $\phi\in[0,\pi/4)$,
+$\lim_{\phi\to 0^+}y_p\,'(\phi)$ and $\lim_{\phi\to \pi/4^-}y_p\,'(\phi)$ do not exist, so the function is not differentiable on the entire interval.
+
+From observing the graph of $y_p(\phi)$ on Page 6, this is confirmed visually. Since the endpoints of $y_p(\phi)$ on this interval are its two roots,
+they cannot be found through this method. The bisection method works, however since the only requirement is continuity of $y_p(\phi)$ on the interval.
+
+\subsubsection{Minimizing \texorpdfstring{$w_p(\phi)$}{}}
 
 The code used to implement both algorithms is located here.
 
