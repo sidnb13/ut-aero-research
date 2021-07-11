@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 # set domain and consts
 N = 1000
-PLOT = True
+PLOT = False
 START = 0
 END = np.pi/4
 
@@ -40,7 +40,7 @@ yPhiDeriv = lambda beta : np.diff(yPhi(phiIntReal,beta))/np.diff(phiIntReal)
 # bisection algorithm to find roots of y(phi) and w'(phi)
 def bisectionAlgorithm(f,phiInt,Beta):
     # calculating iteration upper bound
-    iterMax = int(np.log2(EPSILON_0/EPSILON))
+    iterMax = int(np.log(EPSILON_0/EPSILON)/np.log(2))
     # iterate through until root is found
     a,b = phiInt[np.argmin(phiInt)],phiInt[np.argmax(phiInt)]
     c,n = 0,1
@@ -75,19 +75,16 @@ def newtonRaphson(f, f2, phiInt, Beta, numIter):
         x0 = x1
     return None
 
-print(newtonRaphson(yPhi,yPhiDerivInst,phiIntReal(Beta),Beta,1000))
+# generating vectors and plots for delta/beta
+delta = np.linspace(0.001,1,N)
+beta = np.sqrt(1/delta)
+
+
 
 if PLOT:
     plt.rcParams.update({
         "text.usetex": True,
-        "font.family": "sans-serif",
-        "font.sans-serif": ["Helvetica"]
     })
-
-    plt.plot(phiInt,wPhi(phiInt,Beta),label='$w_p(\\phi)$')
-    plt.plot(phiInt,wPhiDeriv(phiInt,Beta),label='$w_p\'(\\phi)$')
-    plt.plot(phiInt,np.zeros(N),linestyle='dashdot')
-    plt.plot(bisectionAlgorithm(wPhiDeriv,phiInt,Beta),0,marker='o', markersize=5, color="black")
 
     plt.xlim(START,END)
     plt.ylim(-1,5)

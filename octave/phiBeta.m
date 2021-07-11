@@ -1,5 +1,10 @@
 load('variables.mat');
-source('functions.m');
+
+% plot export function
+function exportPlot(fileName, fnum)
+    print(fnum, sprintf('%s.pdf', fileName), '-dpdfcairo');
+    system(sprintf('mv %s.pdf ../plots/%s.pdf', fileName, fileName));
+end
 
 % Defining yp as anonymous function
 g_p = @(Beta_p) Beta_p^4*(3*pi + 8)^2 * (sin(2*phi + pi/2)).^2 ...
@@ -57,9 +62,9 @@ plot(delta,w_1,'k', 'linewidth', 1);
 plot(delta,y_0,'r', 'linewidth', 1);
 ylim([0 1.5]);
 xlabel("{\\it \\delta}");
-ylabel("{\\it \\phi_m}");
-title("{\\it \\phi_m} vs. {\\it \\delta} s.t. {\\it y_p(\\phi_m) = 0}");
-legend({"{\\it \\phi_m}", "{\\it w_p(\\phi_m)}", "{\\it y_p(\\phi_m)}"}, 'location', 'northwest', 'orientation', 'vertical');
+ylabel("{\\it \\phi_0}");
+title("{\\it \\phi_0} vs. {\\it \\delta} s.t. {\\it y_p(\\phi_0) = 0}");
+legend({"{\\it \\phi_0}", "{\\it w_p(\\phi_0)}", "{\\it y_p(\\phi_0)}"}, 'location', 'northwest', 'orientation', 'vertical');
 legend boxoff;
 exportPlot('phi_delta_y', 1);
 
@@ -78,9 +83,9 @@ plot(delta,phi_m2,'b', 'linewidth', 3);
 plot(delta,w_min,'r', 'linewidth', 1);
 ylim([0 1.5]);
 xlabel("{\\it \\delta}");
-ylabel("{\\it \\phi_m}");
-title("{\\it \\phi_m} vs. {\\it \\delta} for min({\\itw_p(\\phi)})");
-legend({"{\\it \\phi_m}", "{\\it w_p(\\phi_m)}"}, 'location', 'northwest', 'orientation', 'vertical');
+ylabel("{\\it \\phi_{min}}");
+title("{\\it \\phi_{min}} vs. {\\it \\delta} for min({\\itw_p(\\phi)})");
+legend({"{\\it \\phi_{min}}", "{\\it w_p(\\phi_{min})}"}, 'location', 'northwest', 'orientation', 'vertical');
 legend boxoff;
 exportPlot('phi_delta_min', 2);
 

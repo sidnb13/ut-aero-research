@@ -1,7 +1,11 @@
 source('variables.m');
 load('variables.mat');
-source('functions.m');
 
+% plot export function
+function exportPlot(fileName, fnum)
+    print(fnum, sprintf('%s.pdf', fileName), '-dpdfcairo');
+    system(sprintf('mv %s.pdf ../plots/%s.pdf', fileName, fileName));
+end
 % definitions
 k = phi + pi/4;
 r = 2*r_0*sin(k).^2;
