@@ -1,5 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import warnings
+
+warnings.filterwarnings('ignore')
 
 # set domain and consts
 N = 1000
@@ -9,8 +12,7 @@ END = np.pi/4
 
 phiInt, step = np.linspace(START,END,N, retstep=True)
 # set constants
-EPSILON = 1e-4
-EPSILON_0 = np.argmax(phiInt) - np.argmin(phiInt)
+EPSILON = 1e-6
 a_T = 0.2
 r_0 = 1
 mu = 1
@@ -39,11 +41,14 @@ yPhiDeriv = lambda beta : np.diff(yPhi(phiIntReal,beta))/np.diff(phiIntReal)
 
 # bisection algorithm to find roots of y(phi) and w'(phi)
 def bisectionAlgorithm(f,phiInt,Beta):
-    # calculating iteration upper bound
-    iterMax = int(np.log(EPSILON_0/EPSILON)/np.log(2))
-    # iterate through until root is found
-    a,b = phiInt[np.argmin(phiInt)],phiInt[np.argmax(phiInt)]
-    c,n = 0,1
+    try:
+        # iterate through until root is found
+        a,b = np.amin(phiInt),np.amax(phiInt)
+        c,n = 0,1
+        # calculating iteration upper bound
+        iterMax = int(np.log((b-a)/EPSILON)/np.log(2))
+    except:
+        return 0
 
     while n <= iterMax:
         c = (a+b)/2
@@ -54,40 +59,75 @@ def bisectionAlgorithm(f,phiInt,Beta):
         else: 
             b = c
         n = n+1
-    return None
+    return c
 
 # Newton-Raphson algorithm to find roots
 def newtonRaphson(f, f2, phiInt, Beta, numIter):
     # guess the midpoint of interval
-    x0 = f(np.median(phiInt),Beta)
-    tol = EPSILON
-    epsilon = np.power(EPSILON,2)
-
+    x0 = np.median(phiInt)
+    # iterate
     for _ in range(numIter):
         y = f(x0,Beta)
         yd = f2(x0,Beta)
 
-        if np.abs(yd) <= epsilon:
-            return x0
         x1 = x0 - y/yd
-        if np.abs(x1 - x0) <= tol:
+        if np.abs(x1 - x0) <= EPSILON:
             return x0
         x0 = x1
-    return None
 
 # generating vectors and plots for delta/beta
 delta = np.linspace(0.001,1,N)
 beta = np.sqrt(1/delta)
 
+phi_0 = np.zeros(N)
+phi_min = np.zeros(N)
 
+for i in range(N):
+    # populate phi_0
+    phi_0[i] = bisectionAlgorithm(yPhi,phiIntReal(beta[i]),beta[i])
+    # populate phi_min
+    phi_min[i] = newtonRaphson(wPhiDeriv,wPhiDeriv2Inst,phiInt,beta[i],100)
+
+# generating a closed-form expression by solving Ac=b for a vector c
+def fitCurve(delta,phi,k):
+    m = k + 1 # num of coeff. and k is degree
+    # define vectors and matrices constant
+    b = np.zeros(m)
+    Amat = np.zeros((m,m))
+    # populate b and A
+    for j in range(0,m):
+        b[j] = np.sum(np.power(delta,k-j)*phi)
+        for i in range(0,m):
+            Amat[j,i] = np.sum(np.power(delta,2*k-i-j))
+    # solve equation Ac=b for c using numpy routine
+    c = np.linalg.solve(Amat,b)
+    # generate a lambda function of the curve
+    polyString = ''
+    for i in range(0,m):
+        polyString = polyString + f'{c[i]}*np.power(d,{k-i}) + '
+    polyString = polyString.rstrip(' + ')
+
+    return (eval(f'lambda d: {polyString}'),polyString)
+
+func1,f1 = fitCurve(delta,phi_0,7)
+func2,f2 = fitCurve(delta,phi_min,40)
+
+plt.plot(delta,func1(delta))
+plt.plot(delta,func2(delta))
+plt.xlim(np.amin(delta),np.amax(delta))
+plt.ylim(0,1)
+plt.show()
 
 if PLOT:
     plt.rcParams.update({
         "text.usetex": True,
     })
 
-    plt.xlim(START,END)
-    plt.ylim(-1,5)
+    plt.plot(delta,phi_min, label='$\\phi_\\mathrm{min}$')
+    plt.plot(delta,phi_0,label='$\\phi_0$')
+
+    plt.xlim(np.amin(delta),np.amax(delta))
+    plt.ylim(0,1)
 
     plt.legend(loc='upper left')
-    plt.savefig('bruh.pdf',backend='pgf',bbox_inches='tight')
+    plt.savefig('plots/phi-functions.pdf',backend='pgf',bbox_inches='tight')
