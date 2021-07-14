@@ -62,3 +62,13 @@ A vectorized implementation yields
 \end{equation}
 
 The matrix-vector equation $A\vec{c}=\vec{b}$ can then be solved for $\vec{c}$ using an optimized linear algebra library, and the resulting coefficients used to generate a function $\phi(\delta)$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.73]{plots/phi-curve-fit-poly.pdf}
+    \caption{Using degree 5 polynomials to approximate $\phi_0(\delta)$ and $\phi_\mathrm{min}(\delta)$}
+\end{figure}
+
+A better approximation is desired since even with degree 5, a polynomial approximation cannot fit well to the smooth curves of $\phi_0$ and $\phi_\mathrm{min}$.
+
+\subsection{Better approximation using Chebyshev polynomial interpolation}

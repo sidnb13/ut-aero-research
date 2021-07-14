@@ -6,7 +6,6 @@ warnings.filterwarnings('ignore')
 
 # set domain and consts
 N = 1000
-PLOT = False
 START = 0
 END = np.pi/4
 
@@ -109,16 +108,27 @@ def fitCurve(delta,phi,k):
 
     return (eval(f'lambda d: {polyString}'),polyString)
 
-func1,f1 = fitCurve(delta,phi_0,7)
-func2,f2 = fitCurve(delta,phi_min,40)
+# control panel to enable/disable plots
+PLOT_NUMERICS = False
+PLOT_CURVE_FITS = True
 
-plt.plot(delta,func1(delta))
-plt.plot(delta,func2(delta))
-plt.xlim(np.amin(delta),np.amax(delta))
-plt.ylim(0,1)
-plt.show()
+if PLOT_CURVE_FITS:
+    func1,f1 = fitCurve(delta,phi_0,5)
+    func2,f2 = fitCurve(delta,phi_min,5)
 
-if PLOT:
+    plt.plot(delta,func1(delta),label='$\\phi_\\mathrm{min}(\\delta);\mathrm{deg}=5$')
+    plt.plot(delta,func2(delta),label='$\\phi_0(\\delta);\mathrm{deg}=5$')
+
+    plt.plot(delta,phi_min, label='$\\phi_\\mathrm{min}$')
+    plt.plot(delta,phi_0,label='$\\phi_0$')
+
+    plt.legend(loc='upper left')
+
+    plt.xlim(np.amin(delta),np.amax(delta))
+    plt.ylim(0,1)
+    plt.savefig('plots/phi-curve-fit-poly.pdf',backend='pgf',bbox_inches='tight')
+
+if PLOT_NUMERICS:
     plt.rcParams.update({
         "text.usetex": True,
     })
