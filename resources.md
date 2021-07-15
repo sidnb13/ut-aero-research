@@ -6,3 +6,5 @@
 
 
 For curve fitting try multiple parent fnuctions and choose amin(error(funclist)) (need to modify method and partial derivatives)
+
+Use Jupyter notebooks next time

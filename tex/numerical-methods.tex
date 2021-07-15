@@ -65,10 +65,47 @@ The matrix-vector equation $A\vec{c}=\vec{b}$ can then be solved for $\vec{c}$ u
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.73]{plots/phi-curve-fit-poly.pdf}
-    \caption{Using degree 5 polynomials to approximate $\phi_0(\delta)$ and $\phi_\mathrm{min}(\delta)$}
+    \includegraphics[]{plots/phi-curve-fit-poly.pdf}
+    \caption{Using degree 5 polynomials to approximate $\phi_0(\delta)$ and $\phi_\mathrm{min}(\delta)$}\label{polyerror}
 \end{figure}
 
-A better approximation is desired since even with degree 5, a polynomial approximation cannot fit well to the smooth curves of $\phi_0$ and $\phi_\mathrm{min}$.
+A better approximation is desired since even with degree 5, a polynomial approximation cannot fit well to the smooth curves of $\phi_0$ and $\phi_\mathrm{min}$. This is evidenced by the Runge effect visible in the error plot of Figure \ref{polyerror}.
 
-\subsection{Better approximation using Chebyshev polynomial interpolation}
+\subsection{Attempted approximation using Chebyshev polynomial interpolation}
+
+The Chebyshev polynomial approximations resulted in a more pronounced Runge effect, as depicted below.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.75]{plots/cheby-approx.pdf}
+    \caption{Chebyshev polynomial approximations}
+\end{figure}
+
+\subsection{Attempted approximation using exponential function}
+
+By far the most accurate fit before the original polynomial approximation, an exponential function of the form $\phi=a\exp(b(\delta-c))+d$ was used.
+Significant Runge effect is still evident in the plot below.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.75]{plots/exponential-approx.pdf}
+    \caption{Exponential approximations}
+\end{figure}
+
+\subsection{Attempted elliptical integral approximation}
+
+Through parameterizing the first-order elliptic integral $K(k;n)$ for some $n\in \mathbb{R}$ and $k\in[0,1]$ for both translation and dilation control, curve fitting was attempted:
+
+\begin{equation}
+    K(k;n)=-\frac{\pi}{2n}+\int_0^1 \frac{dx}{n\sqrt{(1-x^2)(1-k^2x^2)}}
+\end{equation}
+
+The optimization routine returned a value of $n=1$ for both $\phi_0$ and $\phi_\mathrm{min}$, indicating that the first-order approximation is not effective. The plot is shown below.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.75]{plots/elliptical-approx.pdf}
+    \caption{Elliptical approximations}
+\end{figure}
+
+Other possible parameterizations of the first-order functions and possibly of the higher orders will be evaluated, so this is a WIP.
