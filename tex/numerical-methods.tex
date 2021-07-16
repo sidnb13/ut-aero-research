@@ -27,7 +27,7 @@ they cannot be found through this method. The bisection method works, however, s
     \caption{A plot of $\phi_\mathrm{min}$ and $\phi_0$ vs $\delta$}\label{phifig}
 \end{figure}
 
-The code used to implement both algorithms is located \href{https://gist.github.com/sidnb13/d715682a9915ec4cf49d66ceb2e54855}{here}.
+The code used to implement both algorithms is located \href{https://gist.github.com/sidnb13/d715682a9915ec4cf49d66ceb2e54855}{here}. Figure \ref{phifig} demonstrates the bisection method for finding $\phi_0$ and Newton's method for $\phi_\mathrm{min}$.
 
 \section{Curve fitting}
 
@@ -71,6 +71,8 @@ The matrix-vector equation $A\vec{c}=\vec{b}$ can then be solved for $\vec{c}$ u
 
 A better approximation is desired since even with degree 5, a polynomial approximation cannot fit well to the smooth curves of $\phi_0$ and $\phi_\mathrm{min}$. This is evidenced by the Runge effect visible in the error plot of Figure \ref{polyerror}.
 
+\newpage
+
 \subsection{Attempted approximation using Chebyshev polynomial interpolation}
 
 The Chebyshev polynomial approximations resulted in a more pronounced Runge effect, as depicted below.
@@ -108,4 +110,4 @@ The optimization routine returned a value of $n=1$ for both $\phi_0$ and $\phi_\
     \caption{Elliptical approximations}
 \end{figure}
 
-Other possible parameterizations of the first-order functions and possibly of the higher orders will be evaluated, so this is a WIP.
+Other possible parameterizations of the first-order functions and possibly of the higher orders will be evaluated, so this is a work-in-progress.

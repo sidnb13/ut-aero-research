@@ -1,79 +1,100 @@
-import numpy as np
-import numpy.polynomial.chebyshev as cheb
-import matplotlib.pyplot as plt
-import warnings
+from initialize import *
 
-warnings.filterwarnings('ignore')
+class RootApproximation:
+    def __init__(func1, phi, betaVal, func2=None, numIter=200):
+        self.f1 = func1
+        self.f2 = func2
+        self.phi = phi
+        self.betaVal = betaVal
+        self.numIter = numIter
+    
+    def bisectionRoots():
+        try:
+            # iterate through until root is found
+            a,b = np.amin(self.phi),np.amax(self.phi)
+            c,n = 0,1
+            # calculating iteration upper bound
+            iterMax = int(np.log((b-a)/EPSILON)/np.log(2))
+        except:
+            return 0
 
-# set domain and consts
-N = 1000
-START = 0
-END = np.pi/4
+        while n <= iterMax:
+            c = (a+b)/2
+            if (b-a)/2 <= EPSILON or np.isclose(self.f1(c,self.betaVal),0,atol=EPSILON):
+                return c
+            if np.sign(self.f1(a,self.betaVal)) == np.sign(self.f1(c,self.betaVal)):
+                a = c
+            else: 
+                b = c
+            n = n+1
+        return c
 
-phiInt, step = np.linspace(START,END,N, retstep=True)
-# set constants
-EPSILON = 1e-6
-a_T = 0.2
-r_0 = 1
-mu = 1
-Beta = np.sqrt(4*mu/((3*np.pi+8)*a_T*np.power(r_0,2)))
+    def newtonRoots():
+        # guess the midpoint of interval
+        x0 = np.median(self.phi)
+        # iterate
+        for _ in range(self.numIter):
+            y = self.f1(x0,self.betaVal)
+            yd = self.f2(x0,self.betaVal)
 
-# define functions
-wPhi = lambda phi, Beta : 1/np.cos(2*phi) * (1-(3*phi+2)*4/(np.power(Beta,2)*(3*np.pi+8))) + (np.sin(2*phi)+4) * 2/(np.power(Beta,2)*(3*np.pi+8))
+            x1 = x0 - y/yd
+            if np.abs(x1 - x0) <= EPSILON:
+                return x0
+            x0 = x1
 
-gPhi = lambda phi, Beta : np.power((3*np.pi+8),2)*np.power(Beta,4)*np.power(np.sin(2*phi+np.pi/2),2)\
-        -(np.power((3*np.pi+8),2)*np.power(Beta,4)-8*(3*phi+2)*(3*np.pi+8)*np.power(Beta,2)+16*np.power((3*phi+2),2))\
-        -2*np.sin(2*phi+np.pi/2)*(4*np.power(np.sin(phi+np.pi/4),2)+6)*((3*np.pi+8)*np.power(Beta,2)-4*(3*phi+2))\
-        -np.power(np.sin(2*phi+np.pi/2),2)*(16*np.power(np.sin(phi+np.pi/4),4)+48*np.power(np.sin(phi+np.pi/4),2)+36)
-yPhi = lambda phi, Beta : np.sqrt(gPhi(phi,Beta))/(np.power(Beta,2)*(3*np.pi+8)*np.sin(2*phi+np.pi/2))*np.sqrt(mu/r_0)*1/np.tan(phi+np.pi/4)
+class Plotter:
+    def __init__(plotList, limDict, fileName):
+        self.plotList = plotList
+        self.limDict = limDict
+        self.fileName = fileName
 
-# derivatives
-wPhiDeriv = lambda phi, beta : 2*(np.power(np.sin(2*phi+np.pi/2),2)-3)*np.sin(2*phi+np.pi/2)/((3*np.pi+8)*np.power(beta,2)*np.power(np.sin(2*phi+np.pi/2),3))\
-                                - np.cos(2*phi+np.pi/2)*(1-(3*phi+2)*4/((3*np.pi+8)*np.power(beta,2)))/(r_0*np.power(np.sin(2*phi+np.pi/2),3))
+    def plot(show=True,save=False):
+        for plot in self.plotList:
+            plt.plot(plot['xvar'],plot['yvar'],label=plot['label'])
+        
+        plt.xlim(*self.limDict['xlim'])
+        plt.ylim(*self.limDict['ylim'])
+        plt.legend()
+        plt.savefig(self.fileName,backend='pgf',bbox_inches='tight')
+        
+class CurveFit:
+    def __init__(f, delta, phi, k):
+        self.delta = delta
+        self.phi = phi
+        self.k = k
+        self.f = f
 
-wPhiDeriv2Inst = lambda phi, beta: (wPhiDeriv(phi+step,beta)-wPhiDeriv(phi-step,beta))/(2*step)
+    def coeffs():
+        coeffs, pcov = curve_fit(f, self.delta, self.phi)
+        return coeffs
 
-# calculate either overall or inst. deriv
-phiIntReal = lambda beta : phiInt[~np.isnan(yPhi(phiInt,beta))]
+    # generating a closed-form expression by solving Ac=b for a vector c
+    def polyApprox():
+        m = self.k + 1 # num of coeff. and k is degree
+        # define vectors and matrices constant
+        b = np.zeros(m)
+        Amat = np.zeros((m,m))
+        # populate b and A
+        for j in range(0,m):
+            b[j] = np.sum(np.power(self.delta,self.k-j)*self.phi)
+            for i in range(0,m):
+                Amat[j,i] = np.sum(np.power(self.delta,2*self.k-i-j))
+        # solve equation Ac=b for c using numpy routine
+        c = np.linalg.solve(Amat,b)
+        
+        # generate a lambda function of the curve
+        return polyLambdaFromCoeffs(c)
+    
+    # risky function that converts a polynomial coefficient vector -> lambda
+    def polyLambdaFromCoeffs(c):
+        polyString = ''
+        for i in range(0,np.size(c)):
+            polyString = polyString + f'{c[i]}*np.power(d,{np.size(c)-i-1}) + ' # need the -1 for a constant term on end
+        polyString = polyString.rstrip(' + ')
 
-yPhiDerivInst = lambda phi, beta : (yPhi(phi+step,beta)-yPhi(phi-step,beta))/(2*step)
-yPhiDeriv = lambda beta : np.diff(yPhi(phiIntReal,beta))/np.diff(phiIntReal)
+        print(polyString)
 
-# bisection algorithm to find roots of y(phi) and w'(phi)
-def bisectionAlgorithm(f,phiInt,Beta):
-    try:
-        # iterate through until root is found
-        a,b = np.amin(phiInt),np.amax(phiInt)
-        c,n = 0,1
-        # calculating iteration upper bound
-        iterMax = int(np.log((b-a)/EPSILON)/np.log(2))
-    except:
-        return 0
-
-    while n <= iterMax:
-        c = (a+b)/2
-        if (b-a)/2 <= EPSILON or np.isclose(f(c,Beta),0,atol=EPSILON):
-            return c
-        if np.sign(f(a,Beta)) == np.sign(f(c,Beta)):
-            a = c
-        else: 
-            b = c
-        n = n+1
-    return c
-
-# Newton-Raphson algorithm to find roots
-def newtonRaphson(f, f2, phiInt, Beta, numIter):
-    # guess the midpoint of interval
-    x0 = np.median(phiInt)
-    # iterate
-    for _ in range(numIter):
-        y = f(x0,Beta)
-        yd = f2(x0,Beta)
-
-        x1 = x0 - y/yd
-        if np.abs(x1 - x0) <= EPSILON:
-            return x0
-        x0 = x1
+        return eval(f'lambda d: {polyString}')
 
 # generating vectors and plots for delta/beta
 delta = np.linspace(0.001,1,N)
@@ -84,48 +105,18 @@ phi_min = np.zeros(N)
 
 for i in range(N):
     # populate phi_0
-    phi_0[i] = bisectionAlgorithm(yPhi,phiIntReal(beta[i]),beta[i])
+    phi_0[i] = RootApproximation(yPhi,phiIntReal(beta[i]),beta[i]).bisectionRoots()
     # populate phi_min
-    phi_min[i] = newtonRaphson(wPhiDeriv,wPhiDeriv2Inst,phiInt,beta[i],100)
+    phi_min[i] = RootApproximation(wPhiDeriv,phiInt,beta[i],func2=wPhiDeriv2Inst,numIter=100).newtonRoots()
 
-# risky function that converts a polynomial coefficient vector -> lambda
-# too lazy to use np.polynomial
-def polyLambdaFromCoeffs(c):
-    polyString = ''
-    for i in range(0,np.size(c)):
-        polyString = polyString + f'{c[i]}*np.power(d,{np.size(c)-i-1}) + ' # need the -1 for a constant term on end
-    polyString = polyString.rstrip(' + ')
 
-    print(polyString)
-
-    return eval(f'lambda d: {polyString}')
-
-# generating a closed-form expression by solving Ac=b for a vector c
-def fitCurve(delta,phi,k):
-    m = k + 1 # num of coeff. and k is degree
-    # define vectors and matrices constant
-    b = np.zeros(m)
-    Amat = np.zeros((m,m))
-    # populate b and A
-    for j in range(0,m):
-        b[j] = np.sum(np.power(delta,k-j)*phi)
-        for i in range(0,m):
-            Amat[j,i] = np.sum(np.power(delta,2*k-i-j))
-    # solve equation Ac=b for c using numpy routine
-    c = np.linalg.solve(Amat,b)
-    
-    # generate a lambda function of the curve
-    return polyLambdaFromCoeffs(c)
-
+#TODO: refactor everything below this to interface with the classes
 # control panel to enable/disable plots
 ELLIPTIC = True
 EXP = False
 CHEBYSHEV = False
 PLOT_CURVE_FITS = False
 PLOT_NUMERICS = False
-
-from scipy.optimize import curve_fit
-import scipy.integrate as integrate
 
 if ELLIPTIC:
     def elliptic(k, n): # unfortunately cannot be vectorized, do not want to use a power series
