@@ -43,22 +43,31 @@ class RootApproximation:
             x0 = x1
 
 class Plotter:
-    def __init__(self, plotList, limDict, fileName):
-        self.plotList = plotList
+    def __init__(self, plotList, limDict, fileName, axes):
+        self.plotList1 = plotList
         self.limDict = limDict
         self.fileName = fileName
+        self.axes = axes
 
     def plot(self, show=True,save=False):
-        for plot in self.plotList:
+        for plot in self.plotList1:
             plt.plot(plot['xvar'],plot['yvar'],label=plot['label'])
-        
+
         plt.xlim(*self.limDict['xlim'])
         plt.ylim(*self.limDict['ylim'])
+
+        plt.ylabel(self.axes['y'])
+        plt.xlabel(self.axes['x'])
+
         plt.legend()
-        plt.savefig(self.fileName,backend='pgf',bbox_inches='tight')
+
+        if show:
+            plt.show()
+        if save:    
+            plt.savefig(self.fileName,backend='pgf',bbox_inches='tight')
         
 class CurveFit:
-    def __init__(self, f, delta, phi, k=None, guess=None):
+    def __init__(self, delta, phi, k=None, guess=None, f=None):
         self.delta = delta
         self.phi = phi
         self.k = k
@@ -82,17 +91,13 @@ class CurveFit:
                 Amat[j,i] = np.sum(np.power(self.delta,2*self.k-i-j))
         # solve equation Ac=b for c using numpy routine
         c = np.linalg.solve(Amat,b)
+
+        def polyLambdaFromCoeffs(c):
+            polyString = ''
+            for i in range(0,np.size(c)):
+                polyString = polyString + f'{c[i]}*np.power(d,{np.size(c)-i-1}) + ' # need the -1 for a constant term on end
+            polyString = polyString.rstrip(' + ')
+            return eval(f'lambda d: {polyString}')
         
         # generate a lambda function of the curve
-        return c
-    
-    # risky function that converts a polynomial coefficient vector -> lambda
-    def polyLambdaFromCoeffs(self, c):
-        polyString = ''
-        for i in range(0,np.size(c)):
-            polyString = polyString + f'{c[i]}*np.power(d,{np.size(c)-i-1}) + ' # need the -1 for a constant term on end
-        polyString = polyString.rstrip(' + ')
-
-        print(polyString)
-
-        return eval(f'lambda d: {polyString}')
+        return c, polyLambdaFromCoeffs(c)

@@ -1,3 +1,4 @@
+from matplotlib.pyplot import plot
 from requirements import *
 from NumericalMethods import CurveFit, RootApproximation, Plotter
 
@@ -10,6 +11,10 @@ for i in range(N):
     # populate phi_min
     phi_min[i] = RootApproximation(wPhiDeriv,phi,beta[i],func2=wPhiDeriv2Inst,numIter=100).newtonRoots()
 
+
+# common plot limits
+limits = {'xlim': (np.amin(delta),np.amax(delta)), 'ylim': (0,1)}
+
 #TODO: refactor everything below this to interface with the classes
 # control panel to enable/disable plots
 
@@ -21,9 +26,9 @@ def elliptic(k, n): # unfortunately cannot be vectorized, do not want to use a p
         intvals[i], temp = integrate.quad(lambda x: -np.pi/(2*n) + 1/(n*np.sqrt((1-np.power(x,2))*(1-k[i]**2*x**2))),0,1)
     return intvals
 
-ell0 = CurveFit(elliptic,delta,phi_min,delta)
+ell0 = CurveFit(delta,phi_min,delta,f=elliptic)
 ell0Coeffs = ell0.getCoeffs()
-ellmin = CurveFit(elliptic,delta,phi_0,delta)
+ellmin = CurveFit(delta,phi_0,delta,f=elliptic)
 ellminCoeffs = ellmin.getCoeffs()
 
 ellPlots = [
@@ -31,10 +36,9 @@ ellPlots = [
     {'xvar': delta, 'yvar': elliptic(delta,*ellminCoeffs), 'label': f'Approx for $\\phi_\\mathrm{{min}}$ with $n={ellminCoeffs[0]}$'},
     {'xvar': delta, 'yvar': phi_0, 'label': '$\\phi_0$'},
     {'xvar': delta, 'yvar': phi_min, 'label': '$\\phi_\\mathrm{min}$'}]
-ellLim = {'xlim': (np.amin(delta),np.amax(delta)), 'ylim': (0,1)}
 ellFile = 'plots/elliptical-approx.pdf'
 
-ellPlotObj = Plotter(ellPlots,ellLim,ellFile)
+ellPlotObj = Plotter(ellPlots,limits,ellFile,{'x': '$\\delta$', 'y': '$\\phi$'})
 
 # POWER FIT
 
@@ -43,9 +47,9 @@ def Power(x, a, b, c, d):
 
 guess = np.asarray([1,5,1.05,0])
 
-pow0 = CurveFit(Power,delta,phi_0)
+pow0 = CurveFit(delta,phi_0,f=Power)
 pow0Coeffs = pow0.getCoeffs()
-powmin = CurveFit(Power,delta,phi_min)
+powmin = CurveFit(delta,phi_min,f=Power)
 powminCoeffs = powmin.getCoeffs()
 
 powPlots = [
@@ -54,10 +58,9 @@ powPlots = [
     {'xvar': delta, 'yvar': phi_0, 'label': '$\\phi_0$'},
     {'xvar': delta, 'yvar': phi_min, 'label': '$\\phi_\\mathrm{min}$'}
 ]
-powLim = {'xlim': (np.amin(delta),np.amax(delta)), 'ylim': (0,1)}
 powFile = 'plots/exponential-approx.pdf'
 
-powPlotObj = Plotter(powPlots,powLim,powFile)
+powPlotObj = Plotter(powPlots,limits,powFile,{'x': '$\\delta$', 'y': '$\\phi$'})
 
 # most accurate chebyshev approximation, 
 # return chebyshev polynomial coefficient vector
@@ -74,54 +77,49 @@ chebPlots = [
     {'xvar': delta, 'yvar': phi_0, 'label': '$\\phi_0$'},
     {'xvar': delta, 'yvar': phi_min, 'label': '$\\phi_\\mathrm{min}$'}
 ]
-chebLim = {'xlim': (np.amin(delta),np.amax(delta)), 'ylim': (0,1)}
 chebFile = 'plots/cheby-approx.pdf'
 
-chebPlotObj = Plotter(chebPlots, chebLim, chebFile)
+chebPlotObj = Plotter(chebPlots, limits, chebFile, {'x': '$\\delta$', 'y': '$\\phi$'})
 
 # normal polynomials
 
-# func1 = fitCurve(delta,phi_0,5)
-# func2 = fitCurve(delta,phi_min,5)
+if 0:
+    func1 = fitCurve(delta,phi_0,5)
+    func2 = fitCurve(delta,phi_min,5)
 
-# plt.subplot(211)
+    plt.subplot(211)
 
-# plt.plot(delta,func1(delta),label='$\\phi_\\mathrm{min}(\\delta);\mathrm{deg}=5$')
-# plt.plot(delta,func2(delta),label='$\\phi_0(\\delta);\mathrm{deg}=5$')
+    plt.plot(delta,func1(delta),label='$\\phi_\\mathrm{min}(\\delta);\mathrm{deg}=5$')
+    plt.plot(delta,func2(delta),label='$\\phi_0(\\delta);\mathrm{deg}=5$')
 
-# plt.plot(delta,phi_min, label='$\\phi_\\mathrm{min}$')
-# plt.plot(delta,phi_0,label='$\\phi_0$')
+    plt.plot(delta,phi_min, label='$\\phi_\\mathrm{min}$')
+    plt.plot(delta,phi_0,label='$\\phi_0$')
 
-# plt.legend(loc='upper left')
-# plt.xlim(np.amin(delta),np.amax(delta))
-# plt.ylim(0,1)
+    plt.legend(loc='upper left')
+    plt.xlim(np.amin(delta),np.amax(delta))
+    plt.ylim(0,1)
 
-# plt.ylabel('$\\phi$')
+    plt.ylabel('$\\phi$')
 
-# plt.subplot(212)
+    plt.subplot(212)
 
-# plt.plot(delta,np.abs(func1(delta)-phi_0),label='$\\mathrm{err}(\phi_\\mathrm{min}(\\delta))$')
-# plt.plot(delta,np.abs(func2(delta)-phi_min), label='$\\mathrm{err}(\phi_0(\\delta))$')
+    plt.plot(delta,np.abs(func1(delta)-phi_0),label='$\\mathrm{err}(\phi_\\mathrm{min}(\\delta))$')
+    plt.plot(delta,np.abs(func2(delta)-phi_min), label='$\\mathrm{err}(\phi_0(\\delta))$')
 
-# plt.legend(loc='upper left')
-# plt.ylim(0,0.1)
-# plt.xlim(np.amin(delta),np.amax(delta))
+    plt.legend(loc='upper left')
+    plt.ylim(0,0.1)
+    plt.xlim(np.amin(delta),np.amax(delta))
 
-# plt.xlabel('$\\delta$')
-# plt.ylabel('approximation error')
+    plt.xlabel('$\\delta$')
+    plt.ylabel('approximation error')
 
-# plt.savefig('plots/phi-curve-fit-poly.pdf',backend='pgf',bbox_inches='tight')
+    plt.savefig('plots/phi-curve-fit-poly.pdf',backend='pgf',bbox_inches='tight')
 
-# # regplot
+# regplot
 
-# plt.plot(delta,phi_min, label='$\\phi_\\mathrm{min}$')
-# plt.plot(delta,phi_0,label='$\\phi_0$')
+plist = [
+    {'xvar': delta, 'yvar': phi_0, 'label': '$\\phi_0$'},
+    {'xvar': delta, 'yvar': phi_min, 'label': '$\\phi_\\mathrm{min}$'}
+]
 
-# plt.xlim(np.amin(delta),np.amax(delta))
-# plt.ylim(0,1)
-
-# plt.xlabel('$\\delta$')
-# plt.ylabel('$\\phi$')
-
-# plt.legend(loc='upper left')
-# plt.savefig('plots/phi-functions.pdf',backend='pgf',bbox_inches='tight')
+regular_plot = Plotter(plist,limits,'plots/phi-functions.pdf', {'x': '$\\delta$', 'y': '$\\phi$'})
