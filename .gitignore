@@ -3,4 +3,4 @@ octave-workspace
 output/*
 !output/*.pdf
 .vscode/
-python/__pycache__
+**/__pycache__

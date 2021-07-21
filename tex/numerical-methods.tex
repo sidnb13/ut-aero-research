@@ -94,7 +94,7 @@ Significant Runge effect is still evident in the plot below.
     \caption{Exponential approximations}
 \end{figure}
 
-\subsection{Attempted elliptical integral approximation}
+\subsection{Attempted elliptical integral of first kind approximation}
 
 Through parameterizing the first-order elliptic integral $K(k;n)$ for some $n\in \mathbb{R}$ and $k\in[0,1]$ for both translation and dilation control, curve fitting was attempted:
 
@@ -110,4 +110,34 @@ The optimization routine returned a value of $n=1$ for both $\phi_0$ and $\phi_\
     \caption{Elliptical approximations}
 \end{figure}
 
-Other possible parameterizations of the first-order functions and possibly of the higher orders will be evaluated, so this is a work-in-progress.
+Further parameterization attempts of $K(k)$ did not yield better results, as the curvature of the elliptic integral function cannot be manipulated easily to fit the data.
+
+\subsection{Univariate spline approximation}
+
+This method yielded the best results. A univariate spline of degree $k=3$ with smoothness factor $s=0.001$ was used to approximate $\phi_0$ and $\phi_\mathrm{min}$.
+Figure \ref{splineplot} shows that the method was successful, with minimized Runge effect and typical error magnitudes lower than that of the polynomial approximation.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[]{plots/spline.pdf}
+    \caption{Spline approximation plot}\label{splineplot}
+\end{figure}
+
+The computer output below details the properties of each spline:
+
+{\small\begin{verbatim}
+    ---------- phi_0 spline approx ----------
+LSQ Error =         0.001000051241244917
+Knots =         [0.001 0.501 0.751 0.876 1.   ]
+Coeffs =        [-4.40529375e-04  3.92784349e-02  1.04654145e-01  2.56034241e-01
+  4.15005836e-01  5.76096213e-01  7.73738936e-01]
+
+---------- phi_min spline approx ----------
+LSQ Error =         0.0009999540547108812
+Knots =         [0.001 0.501 0.626 0.751 0.814 0.876 0.907 0.938 0.969 0.977 0.985 0.993
+ 0.997 1.   ]
+Coeffs =        [-4.58365176e-05  1.99513345e-02  4.68542634e-02  1.06810792e-01
+  1.41001801e-01  1.78919227e-01  2.10975405e-01  2.46198594e-01
+  2.81539962e-01  3.21468750e-01  3.64172354e-01  3.99187610e-01
+  4.27132615e-01  5.02562701e-01  4.92718655e-01  7.78749733e-01]
+\end{verbatim}}
