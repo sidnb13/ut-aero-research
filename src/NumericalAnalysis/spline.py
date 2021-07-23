@@ -1,6 +1,6 @@
-from requirements import *
-from NumericalMethods import Plotter
-from approximations import *
+from requirements.imports import *
+from requirements.numericalMethods import *
+from requirements.variables import *
 
 from scipy.interpolate import UnivariateSpline
 

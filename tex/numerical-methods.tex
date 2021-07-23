@@ -71,15 +71,13 @@ The matrix-vector equation $A\vec{c}=\vec{b}$ can then be solved for $\vec{c}$ u
 
 A better approximation is desired since even with degree 5, a polynomial approximation cannot fit well to the smooth curves of $\phi_0$ and $\phi_\mathrm{min}$. This is evidenced by the Runge effect visible in the error plot of Figure \ref{polyerror}.
 
-\newpage
-
 \subsection{Attempted approximation using Chebyshev polynomial interpolation}
 
 The Chebyshev polynomial approximations resulted in a more pronounced Runge effect, as depicted below.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.75]{plots/cheby-approx.pdf}
+    \includegraphics[scale=0.5]{plots/cheby-approx.pdf}
     \caption{Chebyshev polynomial approximations}
 \end{figure}
 
@@ -90,7 +88,7 @@ Significant Runge effect is still evident in the plot below.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.75]{plots/exponential-approx.pdf}
+    \includegraphics[scale=0.5]{plots/exponential-approx.pdf}
     \caption{Exponential approximations}
 \end{figure}
 
@@ -106,7 +104,7 @@ The optimization routine returned a value of $n=1$ for both $\phi_0$ and $\phi_\
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.75]{plots/elliptical-approx.pdf}
+    \includegraphics[scale=0.5]{plots/elliptical-approx.pdf}
     \caption{Elliptical approximations}
 \end{figure}
 
@@ -119,7 +117,7 @@ Figure \ref{splineplot} shows that the method was successful, with minimized Run
 
 \begin{figure}[H]
     \centering
-    \includegraphics[]{plots/spline.pdf}
+    \includegraphics[scale=0.8]{plots/spline.pdf}
     \caption{Spline approximation plot}\label{splineplot}
 \end{figure}
 

@@ -1,11 +1,6 @@
 import numpy as np
-import numpy.polynomial.chebyshev as cheb
-import matplotlib.pyplot as plt
-
-from scipy.optimize import curve_fit
-import scipy.integrate as integrate
-
 import warnings
+
 warnings.filterwarnings('ignore')
 
 # set domain and consts

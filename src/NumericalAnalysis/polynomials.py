@@ -1,6 +1,6 @@
-import requirements
-from NumericalMethods import CurveFit, RootApproximation, Plotter
-from approximations import *
+from requirements.imports import *
+from requirements.numericalMethods import *
+from requirements.variables import *
 
 func1 = fitCurve(delta,phi_0,5)
 func2 = fitCurve(delta,phi_min,5)

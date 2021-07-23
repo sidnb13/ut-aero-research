@@ -1,6 +1,9 @@
-from requirements import *
-from NumericalMethods import CurveFit, RootApproximation, Plotter
-from approximations import *
+from requirements.imports import *
+from requirements.numericalMethods import *
+from requirements.variables import *
+
+import numpy.polynomial.chebyshev as cheb
+
 
 # most accurate chebyshev approximation, 
 # return chebyshev polynomial coefficient vector

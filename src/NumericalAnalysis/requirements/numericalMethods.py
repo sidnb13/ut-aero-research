@@ -1,4 +1,6 @@
-from requirements import *
+import matplotlib.pyplot as plt
+import numpy as np
+from .variables import *
 
 class RootApproximation:
     def __init__(self, func1, phi, betaVal, func2=None, numIter=200):
@@ -101,3 +103,15 @@ class CurveFit:
         
         # generate a lambda function of the curve
         return c, polyLambdaFromCoeffs(c)
+
+phi_0 = np.zeros(N)
+phi_min = np.zeros(N)
+
+for i in range(N):
+    # populate phi_0
+    phi_0[i] = RootApproximation(yPhi,phiReal(beta[i]),beta[i]).bisectionRoots()
+    # populate phi_min
+    phi_min[i] = RootApproximation(wPhiDeriv,phi,beta[i],func2=wPhiDeriv2Inst,numIter=100).newtonRoots()
+
+# common plot limits
+limits = {'xlim': (np.amin(delta),np.amax(delta)), 'ylim': (0,1)}
