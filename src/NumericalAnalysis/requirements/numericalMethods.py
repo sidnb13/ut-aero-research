@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from .imports import *
 from .variables import *
 
 class RootApproximation:

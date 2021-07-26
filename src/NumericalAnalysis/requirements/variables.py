@@ -9,8 +9,9 @@ START = 0
 END = np.pi/4
 
 phi, step = np.linspace(START,END,N, retstep=True)
+
 # set constants
-EPSILON = 1e-6
+EPSILON = 1e-4
 a_T = 0.2
 r_0 = 1
 mu = 1
