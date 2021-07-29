@@ -5,7 +5,7 @@ from requirements.variables import *
 import numpy.polynomial.chebyshev as chebyshev
 from scipy.interpolate import lagrange
 
-NUM_PTS = 7 # deg = NUM_PTS - 1
+NUM_PTS = 9 # deg = NUM_PTS - 1
 
 cheb_n = 2*NUM_PTS# due to even symmetry
 cheb_nodes = chebyshev.chebpts1(cheb_n)
@@ -19,7 +19,7 @@ y_pts = np.zeros(NUM_PTS)
 # collect corresponding interpolation points
 for i in range(N):
     for j in range(NUM_PTS):
-        if (np.abs(nodes[j] - delta[i]) <= EPSILON):
+        if np.abs(delta[i] - nodes[j]) <= 1e-3:
             phi0_pts[j] = phi_0[i]
             phimin_pts[j] = phi_min[i]
 
@@ -27,28 +27,39 @@ for i in range(N):
 poly_phi0 = lagrange(nodes, phi0_pts)
 poly_phimin = lagrange(nodes, phimin_pts)
 
-plt.figure(1)
+def latexify(c,var):
+    s = f'$f({var})='
+    for i in range(c.shape[0]):
+        ind_var = f'{var}^{{{c.shape[0]-i-1}}}' if i < c.shape[0]-1 else ''
+        s += f'{int(np.round(c[i],0))}{ind_var}+'
+    return s.strip('+').replace('+-','-') + '$'
 
-plt.xlim(*limits['xlim'])
-plt.ylim(*limits['ylim'])
+# plt.figure(1)
 
-for i in range(NUM_PTS):
-    plt.plot(nodes[i], phi0_pts[i], 'ro')
-plt.plot(delta,poly_phi0(delta),label='polynomial')
-plt.plot(delta, phi_0, label='$\\phi_0$')
+# plt.xlim(*limits['xlim'])
+# plt.ylim(*limits['ylim'])
 
-plt.legend()
-plt.show()
+# for i in range(NUM_PTS):
+#     plt.plot(nodes[i], phi0_pts[i], 'ro')
+# plt.plot(delta,poly_phi0(delta),label='polynomial')
+# plt.plot(delta, phi_0, label='$\\phi_0$')
 
-plt.figure(2)
+# plt.xlabel('$\\delta$')
 
-plt.xlim(*limits['xlim'])
-plt.ylim(*limits['ylim'])
+# plt.legend()
+# plt.show()
 
-for i in range(NUM_PTS):
-    plt.plot(nodes[i], phimin_pts[i], 'ro')
-plt.plot(delta,poly_phimin(delta),label='polynomial')
-plt.plot(delta, phi_min, label='$\\phi_\\mathrm{min}$')
+# plt.figure(2)
 
-plt.legend()
-plt.show()
+# plt.xlim(*limits['xlim'])
+# plt.ylim(*limits['ylim'])
+
+# for i in range(NUM_PTS):
+#     plt.plot(nodes[i], phimin_pts[i], 'ro')
+# plt.plot(delta,poly_phimin(delta),label='polynomial')
+# plt.plot(delta, phi_min, label='$\\phi_\\mathrm{min}$')
+
+# plt.xlabel('$\\delta$')
+
+# plt.legend()
+# plt.show()
