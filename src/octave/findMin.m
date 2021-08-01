@@ -14,10 +14,11 @@ d1 = tan(2*k)/(2*mu);
 d2 = (1-a_T*r_0^2/mu * (3*phi+2))./(a_T*r_0^2*(sin(2*k).^2-3));
 
 % minimization
-intersect = find(abs(d1 - d2) <= min(abs(d1 - d2)));
+intersect = find(abs(d1 - d2) <= min(abs(d1 - d2)))
 
 ix = phi(intersect)
 iy = mean([d1(intersect) d2(intersect)])
+
 r_min = r(intersect)
 
 % plot
