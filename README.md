@@ -3,6 +3,8 @@
 My work is primarily focused on applying numerical methods to closed-form equations involving spaceflight parameters. 
 This repository is composed of a writeup and its associated code and static files.
 
+**[See project writeup](./output/writeup.pdf)**
+
 ## Tree
 
 ```
